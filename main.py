@@ -10,16 +10,18 @@ def brexit():
     cls()
     exit()
 
-checked = 0
-dl = 0
 if not os.path.exists("data"):
     os.makedirs("data")
+    
+checked = 0
+dl = 0
+
 def log_in():
     global dl
     global all
     cls()
-    login_str = input(f"Login: ")
-    password_str = input(f"Password: ")
+    login_str = input("Login: ")
+    password_str = input("Password: ")
     vkObj = vk_api.VkApi(login=login_str, password=password_str)
     try:
         vkObj.auth()
