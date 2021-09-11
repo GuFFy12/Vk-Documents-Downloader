@@ -6,7 +6,7 @@ def cls():
 
 def brexit():
     print()
-    input(f"Press Enter to exit.")
+    input("Press Enter to exit.")
     cls()
     exit()
 
