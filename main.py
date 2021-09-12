@@ -1,34 +1,28 @@
-import vk_api, requests, re, os
+import vk_api, requests, re, os, time
 from sys import exit
 
 def cls():
     os.system("cls" if os.name=="nt" else "clear")
 
-def brexit():
-    print()
-    input("Press Enter to exit.")
-    cls()
-    exit()
-
-if not os.path.exists("data"):
-    os.makedirs("data")
-    
-checked = 0
-dl = 0
-
 def log_in():
+    if not os.path.exists("data"):
+        os.makedirs("data")
     global dl
     global all
+    dl = 0
+    all = 0
     cls()
     login_str = input("Login: ")
     password_str = input("Password: ")
-    vkObj = vk_api.VkApi(login=login_str, password=password_str)
+    vkObj = vk_api.VkApi(login=login_str, password=password_str, auth_handler=auth_handler)
     try:
         vkObj.auth()
-    except:
-        print("Invlaid login or password. You disable 2fa?")
-        brexit()
-    print("Success login!")
+    except vk_api.AuthError as error_msg:
+        print(error_msg)
+        time.sleep(2)
+        log_in()
+    else:
+        print("Success login!")
     api = vkObj.get_api()
     documents = api.docs.get()["items"]
     all = len(documents)
@@ -40,7 +34,13 @@ def log_in():
                 output_file.write(r.content)
         dl += 1
         stat()
-    brexit()
+    input("Press Enter to exit.")
+    exit()
+
+def auth_handler():
+    key = input("Enter authentication code: ")
+    remember_device = True
+    return key, remember_device
 
 def get_valid_filename(s):
     s = str(s).strip().replace(' ', '_')
